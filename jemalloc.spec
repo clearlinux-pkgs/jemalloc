@@ -4,7 +4,7 @@
 #
 Name     : jemalloc
 Version  : 4.0.3
-Release  : 11
+Release  : 12
 URL      : http://www.canonware.com/download/jemalloc/jemalloc-4.0.3.tar.bz2
 Source0  : http://www.canonware.com/download/jemalloc/jemalloc-4.0.3.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
