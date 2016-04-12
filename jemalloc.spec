@@ -4,7 +4,7 @@
 #
 Name     : jemalloc
 Version  : 4.1.0
-Release  : 14
+Release  : 15
 URL      : http://www.canonware.com/download/jemalloc/jemalloc-4.1.0.tar.bz2
 Source0  : http://www.canonware.com/download/jemalloc/jemalloc-4.1.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
@@ -63,9 +63,17 @@ lib components for the jemalloc package.
 
 
 %prep
+cd ..
 %setup -q -n jemalloc-4.1.0
 
 %build
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -falign-functions=32 -flto -O3 -fno-semantic-interposition "
+export FCFLAGS="$CFLAGS -falign-functions=32 -flto -O3 -fno-semantic-interposition "
+export FFLAGS="$CFLAGS -falign-functions=32 -flto -O3 -fno-semantic-interposition "
+export CXXFLAGS="$CXXFLAGS -falign-functions=32 -flto -O3 -fno-semantic-interposition "
 %configure --disable-static
 make V=1  %{?_smp_mflags}
 
