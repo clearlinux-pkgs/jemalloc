@@ -1,5 +1,5 @@
 PKG_NAME := jemalloc
-URL := http://www.canonware.com/download/jemalloc/jemalloc-4.2.1.tar.bz2
-ARCHIVES :=
+URL := https://github.com/jemalloc/jemalloc/releases/download/4.4.0/jemalloc-4.4.0.tar.bz2
+
 
 include ../common/Makefile.common
