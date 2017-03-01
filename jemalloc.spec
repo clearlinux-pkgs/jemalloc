@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : jemalloc
-Version  : 4.4.0
-Release  : 22
-URL      : https://github.com/jemalloc/jemalloc/releases/download/4.4.0/jemalloc-4.4.0.tar.bz2
-Source0  : https://github.com/jemalloc/jemalloc/releases/download/4.4.0/jemalloc-4.4.0.tar.bz2
+Version  : 4.5.0
+Release  : 23
+URL      : http://github.com/jemalloc/jemalloc/releases/download/4.5.0/jemalloc-4.5.0.tar.bz2
+Source0  : http://github.com/jemalloc/jemalloc/releases/download/4.5.0/jemalloc-4.5.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
@@ -64,11 +64,11 @@ lib components for the jemalloc package.
 
 
 %prep
-%setup -q -n jemalloc-4.4.0
+%setup -q -n jemalloc-4.5.0
 
 %build
 export LANG=C
-export SOURCE_DATE_EPOCH=1483482250
+export SOURCE_DATE_EPOCH=1488396869
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
@@ -84,6 +84,7 @@ export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
+export SOURCE_DATE_EPOCH=1488396869
 rm -rf %{buildroot}
 %make_install
 
