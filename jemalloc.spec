@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : jemalloc
-Version  : 4.5.0
-Release  : 24
-URL      : http://github.com/jemalloc/jemalloc/releases/download/4.5.0/jemalloc-4.5.0.tar.bz2
-Source0  : http://github.com/jemalloc/jemalloc/releases/download/4.5.0/jemalloc-4.5.0.tar.bz2
+Version  : 5.0.1
+Release  : 25
+URL      : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
+Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
@@ -21,12 +21,12 @@ fragmentation avoidance and scalable concurrency support.  jemalloc first came
 into use as the FreeBSD libc allocator in 2005, and since then it has found its
 way into numerous applications that rely on its predictable behavior.  In 2010
 jemalloc development efforts broadened to include developer support features
-such as heap profiling, Valgrind integration, and extensive monitoring/tuning
-hooks.  Modern jemalloc releases continue to be integrated back into FreeBSD,
-and therefore versatility remains critical.  Ongoing development efforts trend
-toward making jemalloc among the best allocators for a broad range of demanding
-applications, and eliminating/mitigating weaknesses that have practical
-repercussions for real world applications.
+such as heap profiling and extensive monitoring/tuning hooks.  Modern jemalloc
+releases continue to be integrated back into FreeBSD, and therefore versatility
+remains critical.  Ongoing development efforts trend toward making jemalloc
+among the best allocators for a broad range of demanding applications, and
+eliminating/mitigating weaknesses that have practical repercussions for real
+world applications.
 
 %package bin
 Summary: bin components for the jemalloc package.
@@ -64,11 +64,14 @@ lib components for the jemalloc package.
 
 
 %prep
-%setup -q -n jemalloc-4.5.0
+%setup -q -n jemalloc-5.0.1
 
 %build
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1488396869
+export SOURCE_DATE_EPOCH=1499597958
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
@@ -80,11 +83,11 @@ make V=1  %{?_smp_mflags}
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1488396869
+export SOURCE_DATE_EPOCH=1499597958
 rm -rf %{buildroot}
 %make_install
 
