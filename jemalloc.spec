@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : jemalloc
 Version  : 5.0.1
-Release  : 25
+Release  : 26
 URL      : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
 Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
