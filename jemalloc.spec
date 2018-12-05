@@ -5,15 +5,23 @@
 %define keepstatic 1
 Name     : jemalloc
 Version  : 5.0.1
-Release  : 27
+Release  : 28
 URL      : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
 Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
-Requires: jemalloc-bin
-Requires: jemalloc-lib
-Requires: jemalloc-doc
+Requires: jemalloc-bin = %{version}-%{release}
+Requires: jemalloc-lib = %{version}-%{release}
+Requires: jemalloc-license = %{version}-%{release}
+BuildRequires : automake
+BuildRequires : automake-dev
+BuildRequires : gettext-bin
+BuildRequires : libtool
+BuildRequires : libtool-dev
+BuildRequires : m4
+BuildRequires : pkg-config-dev
+Patch1: tlsfix.patch
 
 %description
 jemalloc is a general purpose malloc(3) implementation that emphasizes
@@ -31,6 +39,7 @@ world applications.
 %package bin
 Summary: bin components for the jemalloc package.
 Group: Binaries
+Requires: jemalloc-license = %{version}-%{release}
 
 %description bin
 bin components for the jemalloc package.
@@ -39,9 +48,9 @@ bin components for the jemalloc package.
 %package dev
 Summary: dev components for the jemalloc package.
 Group: Development
-Requires: jemalloc-lib
-Requires: jemalloc-bin
-Provides: jemalloc-devel
+Requires: jemalloc-lib = %{version}-%{release}
+Requires: jemalloc-bin = %{version}-%{release}
+Provides: jemalloc-devel = %{version}-%{release}
 
 %description dev
 dev components for the jemalloc package.
@@ -58,37 +67,49 @@ doc components for the jemalloc package.
 %package lib
 Summary: lib components for the jemalloc package.
 Group: Libraries
+Requires: jemalloc-license = %{version}-%{release}
 
 %description lib
 lib components for the jemalloc package.
 
 
+%package license
+Summary: license components for the jemalloc package.
+Group: Default
+
+%description license
+license components for the jemalloc package.
+
+
 %prep
 %setup -q -n jemalloc-5.0.1
+%patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1499597958
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
-export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
-export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-semantic-interposition "
+export SOURCE_DATE_EPOCH=1543990689
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 %configure
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1499597958
+export SOURCE_DATE_EPOCH=1543990689
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
+cp COPYING %{buildroot}/usr/share/package-licenses/jemalloc/COPYING
 %make_install
 
 %files
@@ -106,12 +127,16 @@ rm -rf %{buildroot}
 /usr/lib64/*.a
 /usr/lib64/libjemalloc.so
 /usr/lib64/pkgconfig/jemalloc.pc
+/usr/share/man/man3/jemalloc.3
 
 %files doc
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc /usr/share/doc/jemalloc/*
-%doc /usr/share/man/man3/*
 
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libjemalloc.so.2
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/jemalloc/COPYING

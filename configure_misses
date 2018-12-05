@@ -1,0 +1,18 @@
+Configure miss: whether compiler is cray
+Configure miss: whether compiler supports -Wshorten-64-to-32
+Configure miss: whether malloc_usable_size definition can use const argument
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: __posix_memalign
+Configure miss: whether utrace(2) is compilable
+Configure miss: dlsym
+Configure miss: whether mach_absolute_time() is compilable
+Configure miss: _malloc_thread_cleanup
+Configure miss: _pthread_mutex_init_calloc_cb
+Configure miss: whether Darwin OSAtomic*() is compilable
+Configure miss: whether to force 32-bit __sync_{add,sub}_and_fetch()
+Configure miss: whether to force 64-bit __sync_{add,sub}_and_fetch()
+Configure miss: whether Darwin os_unfair_lock_*() is compilable
+Configure miss: whether Darwin OSSpin*() is compilable
