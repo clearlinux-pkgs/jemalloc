@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : jemalloc
-Version  : 5.0.1
-Release  : 30
-URL      : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
-Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.0.1/jemalloc-5.0.1.tar.bz2
+Version  : 5.1.0
+Release  : 33
+URL      : https://github.com/jemalloc/jemalloc/releases/download/5.1.0/jemalloc-5.1.0.tar.bz2
+Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.1.0/jemalloc-5.1.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
@@ -74,19 +74,19 @@ license components for the jemalloc package.
 
 
 %prep
-%setup -q -n jemalloc-5.0.1
+%setup -q -n jemalloc-5.1.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1543991637
+export SOURCE_DATE_EPOCH=1543994352
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-%configure  --disable-tls
+%configure  --disable-initial-exec-tls
 make  %{?_smp_mflags}
 
 %check
@@ -97,7 +97,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1543991637
+export SOURCE_DATE_EPOCH=1543994352
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
 cp COPYING %{buildroot}/usr/share/package-licenses/jemalloc/COPYING
