@@ -4,15 +4,16 @@
 #
 %define keepstatic 1
 Name     : jemalloc
-Version  : 5.2.0
-Release  : 35
-URL      : https://github.com/jemalloc/jemalloc/releases/download/5.2.0/jemalloc-5.2.0.tar.bz2
-Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.2.0/jemalloc-5.2.0.tar.bz2
+Version  : 5.2.1
+Release  : 36
+URL      : https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
+Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
 Requires: jemalloc-bin = %{version}-%{release}
 Requires: jemalloc-lib = %{version}-%{release}
+Requires: jemalloc-license = %{version}-%{release}
 
 %description
 jemalloc is a general purpose malloc(3) implementation that emphasizes
@@ -30,6 +31,7 @@ world applications.
 %package bin
 Summary: bin components for the jemalloc package.
 Group: Binaries
+Requires: jemalloc-license = %{version}-%{release}
 
 %description bin
 bin components for the jemalloc package.
@@ -41,6 +43,7 @@ Group: Development
 Requires: jemalloc-lib = %{version}-%{release}
 Requires: jemalloc-bin = %{version}-%{release}
 Provides: jemalloc-devel = %{version}-%{release}
+Requires: jemalloc = %{version}-%{release}
 
 %description dev
 dev components for the jemalloc package.
@@ -57,39 +60,62 @@ doc components for the jemalloc package.
 %package lib
 Summary: lib components for the jemalloc package.
 Group: Libraries
+Requires: jemalloc-license = %{version}-%{release}
 
 %description lib
 lib components for the jemalloc package.
 
 
+%package license
+Summary: license components for the jemalloc package.
+Group: Default
+
+%description license
+license components for the jemalloc package.
+
+
+%package staticdev
+Summary: staticdev components for the jemalloc package.
+Group: Default
+Requires: jemalloc-dev = %{version}-%{release}
+
+%description staticdev
+staticdev components for the jemalloc package.
+
+
 %prep
-%setup -q -n jemalloc-5.2.0
+%setup -q -n jemalloc-5.2.1
+cd %{_builddir}/jemalloc-5.2.1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1554327725
-export LDFLAGS="${LDFLAGS} -fno-lto"
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1579286588
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 %configure  --disable-initial-exec-tls
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1554327725
+export SOURCE_DATE_EPOCH=1579286588
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
+cp %{_builddir}/jemalloc-5.2.1/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
 %make_install
+## Remove excluded files
+rm -f %{buildroot}/usr/bin/pprof
 
 %files
 %defattr(-,root,root,-)
@@ -103,7 +129,6 @@ rm -rf %{buildroot}
 %files dev
 %defattr(-,root,root,-)
 /usr/include/jemalloc/jemalloc.h
-/usr/lib64/*.a
 /usr/lib64/libjemalloc.so
 /usr/lib64/pkgconfig/jemalloc.pc
 /usr/share/man/man3/jemalloc.3
@@ -115,3 +140,12 @@ rm -rf %{buildroot}
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libjemalloc.so.2
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
+
+%files staticdev
+%defattr(-,root,root,-)
+/usr/lib64/libjemalloc.a
+/usr/lib64/libjemalloc_pic.a

@@ -5,6 +5,7 @@ Configure miss: whether compiler supports -herror_on_warning
 Configure miss: whether compiler supports -herror_on_warning
 Configure miss: whether compiler supports -herror_on_warning
 Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
 Configure miss: __posix_memalign
 Configure miss: whether utrace(2) is compilable
 Configure miss: dlsym
