@@ -4,14 +4,15 @@
 #
 %define keepstatic 1
 Name     : jemalloc
-Version  : 5.2.1
-Release  : 36
-URL      : https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
-Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
+Version  : 5.3.0
+Release  : 37
+URL      : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
+Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
 Requires: jemalloc-bin = %{version}-%{release}
+Requires: jemalloc-filemap = %{version}-%{release}
 Requires: jemalloc-lib = %{version}-%{release}
 Requires: jemalloc-license = %{version}-%{release}
 
@@ -32,6 +33,7 @@ world applications.
 Summary: bin components for the jemalloc package.
 Group: Binaries
 Requires: jemalloc-license = %{version}-%{release}
+Requires: jemalloc-filemap = %{version}-%{release}
 
 %description bin
 bin components for the jemalloc package.
@@ -57,10 +59,19 @@ Group: Documentation
 doc components for the jemalloc package.
 
 
+%package filemap
+Summary: filemap components for the jemalloc package.
+Group: Default
+
+%description filemap
+filemap components for the jemalloc package.
+
+
 %package lib
 Summary: lib components for the jemalloc package.
 Group: Libraries
 Requires: jemalloc-license = %{version}-%{release}
+Requires: jemalloc-filemap = %{version}-%{release}
 
 %description lib
 lib components for the jemalloc package.
@@ -84,38 +95,57 @@ staticdev components for the jemalloc package.
 
 
 %prep
-%setup -q -n jemalloc-5.2.1
-cd %{_builddir}/jemalloc-5.2.1
+%setup -q -n jemalloc-5.3.0
+cd %{_builddir}/jemalloc-5.3.0
+pushd ..
+cp -a jemalloc-5.3.0 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1579286588
+export SOURCE_DATE_EPOCH=1652105731
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-lto -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CFLAGS="$CFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FCFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export CXXFLAGS="$CXXFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
 %configure  --disable-initial-exec-tls
 make  %{?_smp_mflags}
 
+unset PKG_CONFIG_PATH
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
+%configure  --disable-initial-exec-tls
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
+cd ../buildavx2;
+make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1579286588
+export SOURCE_DATE_EPOCH=1652105731
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
-cp %{_builddir}/jemalloc-5.2.1/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
+cp %{_builddir}/jemalloc-5.3.0/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
+pushd ../buildavx2/
+%make_install_v3
+popd
 %make_install
 ## Remove excluded files
-rm -f %{buildroot}/usr/bin/pprof
+rm -f %{buildroot}*/usr/bin/pprof
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -137,9 +167,14 @@ rm -f %{buildroot}/usr/bin/pprof
 %defattr(0644,root,root,0755)
 %doc /usr/share/doc/jemalloc/*
 
+%files filemap
+%defattr(-,root,root,-)
+/usr/share/clear/filemap/filemap-jemalloc
+
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libjemalloc.so.2
+/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)
