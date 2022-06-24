@@ -5,14 +5,13 @@
 %define keepstatic 1
 Name     : jemalloc
 Version  : 5.3.0
-Release  : 37
+Release  : 38
 URL      : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
 Group    : Development/Tools
 License  : BSD-2-Clause
 Requires: jemalloc-bin = %{version}-%{release}
-Requires: jemalloc-filemap = %{version}-%{release}
 Requires: jemalloc-lib = %{version}-%{release}
 Requires: jemalloc-license = %{version}-%{release}
 
@@ -33,7 +32,6 @@ world applications.
 Summary: bin components for the jemalloc package.
 Group: Binaries
 Requires: jemalloc-license = %{version}-%{release}
-Requires: jemalloc-filemap = %{version}-%{release}
 
 %description bin
 bin components for the jemalloc package.
@@ -59,19 +57,10 @@ Group: Documentation
 doc components for the jemalloc package.
 
 
-%package filemap
-Summary: filemap components for the jemalloc package.
-Group: Default
-
-%description filemap
-filemap components for the jemalloc package.
-
-
 %package lib
 Summary: lib components for the jemalloc package.
 Group: Libraries
 Requires: jemalloc-license = %{version}-%{release}
-Requires: jemalloc-filemap = %{version}-%{release}
 
 %description lib
 lib components for the jemalloc package.
@@ -106,12 +95,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1652105731
+export SOURCE_DATE_EPOCH=1656044643
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
-export FCFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
-export FFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
-export CXXFLAGS="$CXXFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export CFLAGS="$CFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
+export FCFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
+export FFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
+export CXXFLAGS="$CXXFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
 %configure  --disable-initial-exec-tls
 make  %{?_smp_mflags}
 
@@ -135,7 +124,7 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1652105731
+export SOURCE_DATE_EPOCH=1656044643
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
 cp %{_builddir}/jemalloc-5.3.0/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
@@ -145,7 +134,7 @@ popd
 %make_install
 ## Remove excluded files
 rm -f %{buildroot}*/usr/bin/pprof
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -167,14 +156,11 @@ rm -f %{buildroot}*/usr/bin/pprof
 %defattr(0644,root,root,0755)
 %doc /usr/share/doc/jemalloc/*
 
-%files filemap
-%defattr(-,root,root,-)
-/usr/share/clear/filemap/filemap-jemalloc
-
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc.so.2
 /usr/lib64/libjemalloc.so.2
-/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)
