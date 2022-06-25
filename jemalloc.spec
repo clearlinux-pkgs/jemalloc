@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : jemalloc
 Version  : 5.3.0
-Release  : 38
+Release  : 39
 URL      : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
@@ -95,7 +95,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656044643
+export SOURCE_DATE_EPOCH=1656127125
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
 export FCFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
@@ -124,7 +124,7 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1656044643
+export SOURCE_DATE_EPOCH=1656127125
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
 cp %{_builddir}/jemalloc-5.3.0/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
