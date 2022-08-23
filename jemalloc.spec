@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : jemalloc
 Version  : 5.3.0
-Release  : 42
+Release  : 43
 URL      : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
@@ -95,7 +95,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656127125
+export SOURCE_DATE_EPOCH=1661264085
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
 export FCFLAGS="$FFLAGS -Ofast -falign-functions=32 -fno-lto -fno-semantic-interposition -mprefer-vector-width=256 "
@@ -124,10 +124,10 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1656127125
+export SOURCE_DATE_EPOCH=1661264085
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
-cp %{_builddir}/jemalloc-5.3.0/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
+cp %{_builddir}/jemalloc-%{version}/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7
 pushd ../buildavx2/
 %make_install_v3
 popd
@@ -148,6 +148,7 @@ rm -f %{buildroot}*/usr/bin/pprof
 %files dev
 %defattr(-,root,root,-)
 /usr/include/jemalloc/jemalloc.h
+/usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc.so
 /usr/lib64/libjemalloc.so
 /usr/lib64/pkgconfig/jemalloc.pc
 /usr/share/man/man3/jemalloc.3
@@ -158,7 +159,6 @@ rm -f %{buildroot}*/usr/bin/pprof
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc.so
 /usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc.so.2
 /usr/lib64/libjemalloc.so.2
 
@@ -168,5 +168,7 @@ rm -f %{buildroot}*/usr/bin/pprof
 
 %files staticdev
 %defattr(-,root,root,-)
+/usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc.a
+/usr/lib64/glibc-hwcaps/x86-64-v3/libjemalloc_pic.a
 /usr/lib64/libjemalloc.a
 /usr/lib64/libjemalloc_pic.a
