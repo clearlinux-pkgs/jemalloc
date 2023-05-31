@@ -6,7 +6,7 @@
 %define keepstatic 1
 Name     : jemalloc
 Version  : 5.3.0
-Release  : 46
+Release  : 47
 URL      : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Source0  : https://github.com/jemalloc/jemalloc/releases/download/5.3.0/jemalloc-5.3.0.tar.bz2
 Summary  : A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
@@ -100,7 +100,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1682989985
+export SOURCE_DATE_EPOCH=1685558451
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Ofast -falign-functions=32 -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export FCFLAGS="$FFLAGS -Ofast -falign-functions=32 -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -129,7 +129,7 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1682989985
+export SOURCE_DATE_EPOCH=1685558451
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/jemalloc
 cp %{_builddir}/jemalloc-%{version}/COPYING %{buildroot}/usr/share/package-licenses/jemalloc/c797cef3f1b13a960a5119a084fb88529a924fd7 || :
@@ -152,7 +152,6 @@ rm -f %{buildroot}*/usr/bin/pprof
 
 %files dev
 %defattr(-,root,root,-)
-/V3/usr/lib64/libjemalloc.so
 /usr/include/jemalloc/jemalloc.h
 /usr/lib64/libjemalloc.so
 /usr/lib64/pkgconfig/jemalloc.pc

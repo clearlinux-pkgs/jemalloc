@@ -18,6 +18,20 @@ Configure miss: whether compiler supports -Werror=unknown-warning-option
 Configure miss: whether compiler supports -Werror=unknown-warning-option
 Configure miss: whether compiler supports -Wshorten-64-to-32
 Configure miss: whether compiler supports -Wshorten-64-to-32
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
+Configure miss: whether compiler supports -herror_on_warning
 Configure miss: whether glibc malloc hook is compilable
 Configure miss: whether glibc malloc hook is compilable
 Configure miss: whether glibc memalign hook is compilable
